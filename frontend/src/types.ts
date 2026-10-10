@@ -30,3 +30,22 @@ export interface TweakRequest {
   previous_plan: LaunchPlan;
   user_feedback: string;
 }
+
+export interface ChatMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: string;
+}
+
+export interface ChatRequest {
+  message: string;
+  history: Array<{ role: string; content: string }>;
+  onboarding_data?: OnboardingData | null;
+  launch_plan?: LaunchPlan | null;
+}
+
+export interface ChatResponse {
+  reply: string;
+  model_used: string;
+}

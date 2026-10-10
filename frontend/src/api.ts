@@ -53,3 +53,30 @@ export async function tweakRoadmap(
 
   return response.json();
 }
+
+export async function sendChatMessage(
+  message: string,
+  history: Array<{ role: string; content: string }>,
+  onboardingData?: OnboardingData | null,
+  launchPlan?: LaunchPlan | null
+): Promise<{ reply: string; model_used: string }> {
+  const response = await fetch(`${API_BASE}/chat`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      message,
+      history,
+      onboarding_data: onboardingData || null,
+      launch_plan: launchPlan || null,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.detail || `Server error: ${response.status}`);
+  }
+
+  return response.json();
+}

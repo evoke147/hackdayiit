@@ -23,8 +23,8 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 
-from models import OnboardingData, RoadmapResponse, TweakRequest
-from prompt_builder import build_roadmap_prompt, parse_roadmap_response, build_tweak_prompt
+from models import OnboardingData, RoadmapResponse, TweakRequest, ChatRequest, ChatResponse
+from prompt_builder import build_roadmap_prompt, parse_roadmap_response, build_tweak_prompt, build_chat_prompt
 import gemma_client  # uses ask() which calls gemma-4-26b-a4b-it
 
 app = FastAPI(
@@ -164,4 +164,35 @@ def tweak_roadmap(request: TweakRequest):
     return RoadmapResponse(
         model_used=gemma_client.MODEL_ID,
         launch_plan=updated_plan,
+    )
+
+
+@app.post(
+    "/chat",
+    response_model=ChatResponse,
+    summary="Interactive AI Career Mentor Chatbot",
+)
+def chat_mentor(request: ChatRequest):
+    """
+    Chat with the Antigravity Career Mentor powered by Gemma 4.
+    Understands the student's profile, roadmap, and conversation history.
+    """
+    prompt = build_chat_prompt(
+        message=request.message,
+        history=request.history,
+        onboarding_data=request.onboarding_data,
+        launch_plan=request.launch_plan,
+    )
+
+    try:
+        reply = gemma_client.ask(prompt)
+    except Exception as exc:
+        raise HTTPException(
+            status_code=502,
+            detail=f"Gemma API error: {exc}",
+        )
+
+    return ChatResponse(
+        reply=reply,
+        model_used=gemma_client.MODEL_ID,
     )

@@ -178,3 +178,51 @@ Rules:
 
     return prompt
 
+
+def build_chat_prompt(message: str, history: list, onboarding_data=None, launch_plan=None) -> str:
+    """
+    Builds a contextual prompt for the Antigravity Career Mentor chatbot.
+    Supplies the student's profile, roadmap context, and previous dialogue turns.
+    """
+    context_parts = []
+    if onboarding_data:
+        context_parts.append(f"""Student Profile:
+- Degree: {onboarding_data.degree_specialization} ({onboarding_data.year_semester})
+- Subjects: {onboarding_data.subjects_studied}
+- Skills: {onboarding_data.skills}
+- Languages: {onboarding_data.programming_languages}
+- Goals: {onboarding_data.career_goals}
+- Preferred Industry: {onboarding_data.preferred_industry}""")
+
+    if launch_plan:
+        context_parts.append(f"""Current Launch Plan:
+- Strengths: {', '.join(launch_plan.profile_strengths)}
+- Missing Links: {', '.join(launch_plan.missing_links)}
+- Next 30 Days: {', '.join(launch_plan.next_30_days)}
+- Radar: {launch_plan.industry_radar.topic}""")
+
+    context_str = "\n\n".join(context_parts) if context_parts else "No profile provided yet."
+
+    history_str = ""
+    if history:
+        turns = []
+        for h in history[-6:]:  # last 6 turns
+            role = "Student" if h.role == "user" else "Antigravity Mentor"
+            turns.append(f"{role}: {h.content}")
+        history_str = "\n".join(turns)
+
+    prompt = f"""You are the Antigravity AI Career Mentor, an expert advisor powered by Gemma 4.
+Your mission is to guide Indian university and engineering students to achieve their dream placements, internships, and technical careers.
+You provide encouraging, realistic, highly specific, and actionable advice tailored to their profile. Keep responses concise, structured, and easy to read.
+
+=== STUDENT CONTEXT ===
+{context_str}
+
+=== CONVERSATION HISTORY ===
+{history_str}
+
+Student: {message}
+Antigravity Mentor:"""
+
+    return prompt
+
