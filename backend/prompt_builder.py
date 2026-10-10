@@ -45,29 +45,30 @@ The JSON must follow this exact schema:
 
 {{
   "profile_strengths": [
-    "<strength 1: strongest connection between their skills/languages and preferred industry>",
-    "<strength 2>"
+    "<strength 1: 1 concise sentence>",
+    "<strength 2: 1 concise sentence>"
   ],
   "missing_links": [
-    "<gap 1: specific missing technical skill, portfolio project, or soft skill>",
-    "<gap 2>"
+    "<gap 1: 1 concise sentence identifying specific missing skill or project>",
+    "<gap 2: 1 concise sentence>"
   ],
   "next_30_days": [
-    "<action 1: highly specific task, e.g. Build a [project] using [language from their list]>",
-    "<action 2>",
-    "<action 3>"
+    "<action 1: 1 concise sentence, specific concrete task>",
+    "<action 2: 1 concise sentence>",
+    "<action 3: 1 concise sentence>"
   ],
   "industry_radar": {{
-    "topic": "<1 trending technology or topic in their preferred industry>",
-    "reason": "<brief explanation of why they should care, linked to their subjects>"
+    "topic": "<1 trending technology or topic, 2-5 words>",
+    "reason": "<1 concise sentence on why it matters>"
   }}
 }}
 
 Rules:
-- profile_strengths: exactly 2 strings.
-- missing_links: exactly 2 strings.
-- next_30_days: exactly 3 strings, each a concrete step-by-step task.
-- industry_radar: an object with "topic" and "reason" strings.
+- LENGTH CONSTRAINT: Every bullet/item MUST be short, crisp, and direct (1 concise sentence, strictly under 25 words). Do NOT write long explanations unless the student explicitly asks for a long/detailed response.
+- profile_strengths: exactly 2 short strings.
+- missing_links: exactly 2 short strings.
+- next_30_days: exactly 3 short strings, each a concrete step-by-step task.
+- industry_radar: an object with short "topic" and "reason" strings.
 - Do not include any markdown, bullet symbols, or numbering inside the strings.
 """.strip()
 
@@ -169,10 +170,11 @@ Return ONLY a single valid JSON object adhering to the exact same JSON schema:
 }}
 
 Rules:
-- profile_strengths: exactly 2 strings.
-- missing_links: exactly 2 strings.
-- next_30_days: exactly 3 strings, each a concrete step-by-step task.
-- industry_radar: an object with "topic" and "reason" strings.
+- LENGTH CONSTRAINT: Every string must be short, crisp, and direct (1 concise sentence, strictly under 25 words). Do NOT produce long or wordy responses unless the user explicitly asked for a long/detailed response.
+- profile_strengths: exactly 2 short strings.
+- missing_links: exactly 2 short strings.
+- next_30_days: exactly 3 short strings, each a concrete step-by-step task.
+- industry_radar: an object with short "topic" and "reason" strings.
 - Return ONLY the JSON object, nothing else.
 """.strip()
 
@@ -183,6 +185,7 @@ def build_chat_prompt(message: str, history: list, onboarding_data=None, launch_
     """
     Builds a contextual prompt for the Antigravity Career Mentor chatbot.
     Supplies the student's profile, roadmap context, and previous dialogue turns.
+    Enforces short responses by default unless explicitly asked for a long answer.
     """
     context_parts = []
     if onboarding_data:
@@ -213,7 +216,11 @@ def build_chat_prompt(message: str, history: list, onboarding_data=None, launch_
 
     prompt = f"""You are the Antigravity AI Career Mentor, an expert advisor powered by Gemma 4.
 Your mission is to guide Indian university and engineering students to achieve their dream placements, internships, and technical careers.
-You provide encouraging, realistic, highly specific, and actionable advice tailored to their profile. Keep responses concise, structured, and easy to read.
+
+CRITICAL LENGTH RULE:
+- Your response MUST be SHORT, crisp, and directly to the point (2 to 4 concise sentences or a brief 3-bullet list maximum).
+- Never produce long background essays, verbose explanations, or unsolicited fluff.
+- ONLY provide a long, comprehensive, or detailed answer if the student EXPLICITLY asks for a "long", "detailed", "in-depth", "comprehensive", or "deep dive" response.
 
 === STUDENT CONTEXT ===
 {context_str}
