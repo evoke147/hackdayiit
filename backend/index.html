@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Antigravity — AI Career Accelerator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: rgba(18, 24, 38, 0.7);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --accent: #06b6d4;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --success: #10b981;
+      --warning: #f59e0b;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: radial-gradient(circle at top right, #1e1b4b 0%, var(--bg) 60%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.4);
+      color: #a5b4fc;
+      margin-bottom: 0.75rem;
+    }
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #ffffff 30%, #a5b4fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+    p.subtitle {
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    @media (min-width: 768px) {
+      .grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #cbd5e1;
+      margin-bottom: 0.35rem;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 0.65rem 0.85rem;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 0.5rem;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+    }
+
+    button.btn-primary {
+      width: 100%;
+      padding: 0.85rem;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border: none;
+      border-radius: 0.5rem;
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: opacity 0.2s;
+    }
+    button.btn-primary:hover { opacity: 0.95; }
+    button.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .result-section {
+      margin-top: 1rem;
+      display: none;
+    }
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .section-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #93c5fd;
+      margin: 1rem 0 0.5rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .item-card {
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 0.5rem;
+      padding: 0.75rem 1rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    pre.json-viewer {
+      background: #020617;
+      border: 1px solid #1e293b;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      overflow-x: auto;
+      max-height: 300px;
+      color: #38bdf8;
+    }
+
+    .tweak-box {
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .spinner {
+      border: 3px solid rgba(255, 255, 255, 0.2);
+      border-top: 3px solid #ffffff;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      animation: spin 0.8s linear infinite;
+      display: none;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <span class="badge">Powered by Gemma 4 (gemma-4-26b-a4b-it)</span>
+      <h1>Antigravity Launch Plan</h1>
+      <p class="subtitle">AI Career Accelerator — generate a tailored roadmap in seconds</p>
+    </header>
+
+    <div class="grid">
+      <!-- Input Form -->
+      <div class="card">
+        <h2 style="font-size: 1.2rem; margin-bottom: 1rem;">Student Profile</h2>
+        <form id="onboardingForm">
+          <div class="form-group">
+            <label>Degree & Specialization</label>
+            <input type="text" id="degree" value="B.Tech Computer Science with AI specialization" required>
+          </div>
+          <div class="form-group">
+            <label>Current Year/Semester</label>
+            <input type="text" id="yearSem" value="3rd Year, Semester 5" required>
+          </div>
+          <div class="form-group">
+            <label>Subjects Studied</label>
+            <input type="text" id="subjects" value="DSA, DBMS, OS, Machine Learning" required>
+          </div>
+          <div class="form-group">
+            <label>Skills</label>
+            <input type="text" id="skills" value="Problem solving, teamwork, REST APIs" required>
+          </div>
+          <div class="form-group">
+            <label>Programming Languages</label>
+            <input type="text" id="languages" value="Python, Java, JavaScript" required>
+          </div>
+          <div class="form-group">
+            <label>Career Goals</label>
+            <input type="text" id="goals" value="Become an ML Engineer at a product company" required>
+          </div>
+          <div class="form-group">
+            <label>Preferred Industry</label>
+            <input type="text" id="industry" value="Artificial Intelligence / Machine Learning" required>
+          </div>
+
+          <button type="submit" id="submitBtn" class="btn-primary">
+            <span class="spinner" id="spinner"></span>
+            <span id="btnText">🚀 Generate Launch Plan</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Roadmap Output -->
+      <div class="card">
+        <div class="result-header">
+          <h2 style="font-size: 1.2rem;">Your Roadmap (JSON Output)</h2>
+          <span id="statusTag" style="font-size: 0.8rem; color: var(--text-muted);">Awaiting submission</span>
+        </div>
+
+        <div id="emptyState" style="text-align: center; padding: 3rem 1rem; color: var(--text-muted);">
+          <p style="font-size: 1.8rem; margin-bottom: 0.5rem;">✨</p>
+          <p>Submit your profile on the left to receive your structured Antigravity Launch Plan.</p>
+          <p style="font-size: 0.8rem; margin-top: 1rem; opacity: 0.7;">Calls Gemma 4 via Gemini API: ~15-25 seconds</p>
+        </div>
+
+        <div id="resultContent" class="result-section">
+          <div class="section-title">🌟 Profile Strengths</div>
+          <div id="strengthsList"></div>
+
+          <div class="section-title">⚠️ The Missing Links</div>
+          <div id="missingList"></div>
+
+          <div class="section-title">📅 Next 30 Days</div>
+          <div id="actionsList"></div>
+
+          <div class="section-title">📡 Industry Radar</div>
+          <div class="item-card" id="radarContent"></div>
+
+          <div class="section-title">💻 Raw JSON Output</div>
+          <pre class="json-viewer" id="jsonViewer"></pre>
+
+          <!-- Tweak Box -->
+          <div class="tweak-box">
+            <label>💬 Tweak or Refine Plan (Agent Memory)</label>
+            <input type="text" id="tweakInput" placeholder="e.g. Focus more on PyTorch and internships...">
+            <button type="button" id="tweakBtn" class="btn-primary" style="margin-top: 0.5rem; background: #334155;">
+              <span class="spinner" id="tweakSpinner"></span>
+              <span id="tweakBtnText">Refine Plan</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentPlan = null;
+    let currentProfile = null;
+
+    const form = document.getElementById('onboardingForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const spinner = document.getElementById('spinner');
+    const btnText = document.getElementById('btnText');
+    const statusTag = document.getElementById('statusTag');
+    const emptyState = document.getElementById('emptyState');
+    const resultContent = document.getElementById('resultContent');
+
+    function renderPlan(plan) {
+      emptyState.style.display = 'none';
+      resultContent.style.display = 'block';
+
+      // Strengths
+      const strengthsList = document.getElementById('strengthsList');
+      strengthsList.innerHTML = (plan.profile_strengths || []).map(s => `<div class="item-card">• ${s}</div>`).join('');
+
+      // Gaps
+      const missingList = document.getElementById('missingList');
+      missingList.innerHTML = (plan.missing_links || []).map(s => `<div class="item-card">• ${s}</div>`).join('');
+
+      // Actions
+      const actionsList = document.getElementById('actionsList');
+      actionsList.innerHTML = (plan.next_30_days || []).map((s, idx) => `<div class="item-card"><b>${idx+1}.</b> ${s}</div>`).join('');
+
+      // Radar
+      const radar = plan.industry_radar || {};
+      document.getElementById('radarContent').innerHTML = `<b>Topic:</b> ${radar.topic || 'N/A'}<br><span style="color: #94a3b8; font-size: 0.85rem;">${radar.reason || ''}</span>`;
+
+      // JSON
+      document.getElementById('jsonViewer').innerText = JSON.stringify(plan, null, 2);
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      submitBtn.disabled = true;
+      spinner.style.display = 'inline-block';
+      btnText.innerText = 'Calling Gemma 4...';
+      statusTag.innerText = 'Analyzing profile with Gemma 4...';
+
+      currentProfile = {
+        degree_specialization: document.getElementById('degree').value,
+        year_semester: document.getElementById('yearSem').value,
+        subjects_studied: document.getElementById('subjects').value,
+        skills: document.getElementById('skills').value,
+        programming_languages: document.getElementById('languages').value,
+        career_goals: document.getElementById('goals').value,
+        preferred_industry: document.getElementById('industry').value
+      };
+
+      try {
+        const resp = await fetch('/roadmap', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(currentProfile)
+        });
+
+        if (!resp.ok) {
+          const err = await resp.json();
+          throw new Error(err.detail || 'API request failed');
+        }
+
+        const data = await resp.json();
+        currentPlan = data.launch_plan;
+        renderPlan(currentPlan);
+        statusTag.innerText = `Generated by ${data.model_used}`;
+      } catch (err) {
+        alert('Error: ' + err.message);
+        statusTag.innerText = 'Error';
+      } finally {
+        submitBtn.disabled = false;
+        spinner.style.display = 'none';
+        btnText.innerText = '🚀 Generate Launch Plan';
+      }
+    });
+
+    // Tweak action
+    document.getElementById('tweakBtn').addEventListener('click', async () => {
+      const feedback = document.getElementById('tweakInput').value.trim();
+      if (!feedback || !currentPlan) return;
+
+      const tweakBtn = document.getElementById('tweakBtn');
+      const tweakSpinner = document.getElementById('tweakSpinner');
+      const tweakBtnText = document.getElementById('tweakBtnText');
+
+      tweakBtn.disabled = true;
+      tweakSpinner.style.display = 'inline-block';
+      tweakBtnText.innerText = 'Refining...';
+
+      try {
+        const resp = await fetch('/roadmap/tweak', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            onboarding_data: currentProfile,
+            previous_plan: currentPlan,
+            user_feedback: feedback
+          })
+        });
+
+        if (!resp.ok) {
+          const err = await resp.json();
+          throw new Error(err.detail || 'Refinement failed');
+        }
+
+        const data = await resp.json();
+        currentPlan = data.launch_plan;
+        renderPlan(currentPlan);
+        document.getElementById('tweakInput').value = '';
+      } catch (err) {
+        alert('Error: ' + err.message);
+      } finally {
+        tweakBtn.disabled = false;
+        tweakSpinner.style.display = 'none';
+        tweakBtnText.innerText = 'Refine Plan';
+      }
+    });
+  </script>
+</body>
+</html>

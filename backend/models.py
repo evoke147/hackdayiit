@@ -1,0 +1,110 @@
+"""
+models.py
+---------
+Pydantic models for the /roadmap endpoint request and response.
+
+The response is fully structured JSON — each section of the
+Antigravity Launch Plan has its own typed field so the frontend
+can render them independently without any markdown parsing.
+"""
+
+from pydantic import BaseModel, Field
+from typing import List
+
+
+class OnboardingData(BaseModel):
+    """
+    Everything collected during the user onboarding form.
+    All fields are required so the prompt can be fully populated.
+    """
+
+    degree_specialization: str = Field(
+        ...,
+        description="e.g. 'B.Tech Computer Science with AI specialization'",
+        examples=["B.Tech Computer Science with AI specialization"],
+    )
+    year_semester: str = Field(
+        ...,
+        description="e.g. '3rd Year, Semester 5'",
+        examples=["3rd Year, Semester 5"],
+    )
+    subjects_studied: str = Field(
+        ...,
+        description="Comma-separated list of subjects, e.g. 'DSA, DBMS, OS, Machine Learning'",
+        examples=["DSA, DBMS, OS, Machine Learning"],
+    )
+    skills: str = Field(
+        ...,
+        description="Technical and non-technical skills, e.g. 'Problem solving, teamwork, REST APIs'",
+        examples=["Problem solving, teamwork, REST APIs"],
+    )
+    programming_languages: str = Field(
+        ...,
+        description="Comma-separated, e.g. 'Python, Java, JavaScript'",
+        examples=["Python, Java, JavaScript"],
+    )
+    career_goals: str = Field(
+        ...,
+        description="e.g. 'Become an ML Engineer at a product company'",
+        examples=["Become an ML Engineer at a product company"],
+    )
+    preferred_industry: str = Field(
+        ...,
+        description="e.g. 'Artificial Intelligence / Machine Learning'",
+        examples=["Artificial Intelligence / Machine Learning"],
+    )
+
+
+class IndustryRadar(BaseModel):
+    """A single trending topic with its name and explanation."""
+    topic: str = Field(..., description="Name of the trending technology or topic.")
+    reason: str = Field(..., description="Why the student should care about it.")
+
+
+class LaunchPlan(BaseModel):
+    """
+    The four structured sections of the Antigravity Launch Plan.
+    Each field maps to one section of the prompt output.
+    """
+    profile_strengths: List[str] = Field(
+        ...,
+        description="2 bullet points on the student's strongest assets.",
+        min_length=1,
+    )
+    missing_links: List[str] = Field(
+        ...,
+        description="2 specific gaps the student needs to close.",
+        min_length=1,
+    )
+    next_30_days: List[str] = Field(
+        ...,
+        description="3 concrete, step-by-step action items for the next 30 days.",
+        min_length=1,
+    )
+    industry_radar: IndustryRadar = Field(
+        ...,
+        description="1 trending topic the student should pay attention to.",
+    )
+
+
+class RoadmapResponse(BaseModel):
+    """The fully structured JSON response returned to the frontend."""
+
+    model_used: str = Field(
+        default="gemma-4-26b-a4b-it",
+        description="The Gemma model that generated this roadmap.",
+    )
+    launch_plan: LaunchPlan = Field(
+        ...,
+        description="The complete Antigravity Launch Plan, broken into typed sections.",
+    )
+
+
+class TweakRequest(BaseModel):
+    """
+    Request model for refining or tweaking an existing launch plan.
+    Keeps memory of the original profile and previous plan.
+    """
+    onboarding_data: OnboardingData = Field(..., description="The student's original onboarding profile.")
+    previous_plan: LaunchPlan = Field(..., description="The previously generated launch plan.")
+    user_feedback: str = Field(..., description="The user's specific instructions or tweaks.")
