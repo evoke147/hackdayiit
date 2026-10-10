@@ -1,4 +1,4 @@
-# 🚀 Antigravity — AI Career Accelerator
+# 🚀 Placement path ai
 
 > Lift students above the competition with a personalised career roadmap, powered by **Gemma 4** through the Gemini API.
 
