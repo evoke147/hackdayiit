@@ -6,7 +6,7 @@
 
 ## What it does
 
-A student fills in a short onboarding form (degree, subjects, skills, career goals). Antigravity sends their profile to **Gemma 4** and returns a structured **"Antigravity Launch Plan"** covering:
+A student fills in a short onboarding form (degree, subjects, skills, career goals). It sends their profile to **Gemma 4** and returns a structured **"Placement path ai"** covering:
 
 1. **Profile Strengths** — what they already have going for them
 2. **The Missing Links** — specific gaps to close
