@@ -86,7 +86,7 @@ export default function App() {
     {
       id: 'welcome',
       role: 'assistant',
-      content: "Hello! I am your Antigravity AI Career Mentor powered by Gemma 4. I can answer questions about your coursework, preparation roadmap, mock interviews, or tech career strategies. How can I help you today?",
+      content: "Hello! I am your Placement Pat AI Career Mentor powered by Gemma 4. I can answer questions about your coursework, preparation roadmap, mock interviews, or tech career strategies. How can I help you today?",
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }
   ]);
@@ -219,7 +219,7 @@ export default function App() {
           <div>
             <div className="flex items-center gap-2">
               <h1 className="text-lg font-bold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
-                Antigravity
+                Placement Pat AI
               </h1>
               <span className="text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-full bg-indigo-500/15 border border-indigo-500/30 text-indigo-400">
                 Gemma 4
@@ -529,7 +529,7 @@ export default function App() {
                 <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div>
                     <span className="text-xs font-bold uppercase tracking-wider text-indigo-400">Personalized Blueprint</span>
-                    <h2 className="text-2xl font-bold text-white">🚀 The Antigravity Launch Plan</h2>
+                    <h2 className="text-2xl font-bold text-white">🚀 Placement Pat AI Launch Plan</h2>
                     <p className="text-xs text-slate-400 mt-0.5">
                       Target: <span className="text-slate-200 font-medium">{formData.career_goals}</span> ({formData.preferred_industry})
                     </p>
@@ -695,7 +695,7 @@ export default function App() {
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm font-bold text-white">Antigravity AI Career Mentor</h3>
+                    <h3 className="text-sm font-bold text-white">Placement Pat AI Career Mentor</h3>
                     <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
                   </div>
                   <p className="text-xs text-slate-400">
