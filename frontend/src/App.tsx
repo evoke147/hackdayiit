@@ -121,11 +121,11 @@ export default function App() {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    // Immediately switch to the Launch Plan tab so the user sees the progress screen
+    setActiveTab('roadmap');
     try {
       const res = await generateRoadmap(formData);
       setResponse(res);
-      // Auto-navigate to Roadmap Page on successful generation
-      setActiveTab('roadmap');
     } catch (err: any) {
       setError(err.message || 'Failed to generate roadmap');
     } finally {
